@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<!--
+ **********************************************************
+
+             TUFTS COMP 150-IDS HOMEWORK ASSIGNMENT
+
+        Fill in your name, e-mail and answers to questions
+        in the sections provided below.
+
+          All questions are marked up: <li class="q">
+          All answers are marked up:   <li class="a">
+
+
+     PLEASE DO NOT MODIFY ANY THING OTHER THAN THE
+     NAME, E-MAIL, AND ANSWER FIELDS (you may also add
+     css declarations in the <head> if you need them,
+     but usually you won't.
+
+ **********************************************************
+ -->
+
+
+<html>
+<head>
+<meta charset="utf-8">
+<title>Tufts COMP 150-IDS Assignment &#8212; File Copy Project Report</title>
+<link rel="stylesheet" type="text/css" href="http://www.cs.tufts.edu/comp/150IDS/style/homework.css" />
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body class="homework">
+
+
+<!-- ******************************************************
+	   YOU MUST FILL IN YOUR NAME, UTLN AND EMAIL BELOW!!
+         (You may copy this from an earlier assignment
+                         if you like)
+
+     ****************************************************** -->
+
+
+<div class="student">
+<p>
+<span class="label">Student1 name: </span>
+Yueming Luo
+<br>
+
+<span class="label">UTLN: </span>
+yluo01
+<br>
+
+<span class="label">E-mail: </span>
+<!-- DON'T FORGET UP UPDATE THE MAILTO: URI BELOW ALONG WITH
+     YOUR EMAIL IN THE ANCHOR.  IT SHOULD LOOK LIKE:
+ <a href="mailto:lady.gaga@cs.tufts.edu">lady.gaga@cs.tufts.edu</a>
+-->
+
+<a href="mailto:yue.luo@tufts.edu">yue.luo@tufts.edu</a>
+<br>
+<br>
+<br>
+<span class="label">Student2 name: </span>
+Jacob Apkon
+<br>
+<span class="label">UTLN: </span>
+japkon01
+<br>
+
+<span class="label">E-mail: </span>
+<!-- DON'T FORGET UP UPDATE THE MAILTO: URI BELOW ALONG WITH
+     YOUR EMAIL IN THE ANCHOR.  IT SHOULD LOOK LIKE:
+ <a href="mailto:lady.gaga@cs.tufts.edu">lady.gaga@cs.tufts.edu</a>
+-->
+
+<a href="mailto:jacob.apkon@tufts.edu">jacob.apkon@tufts.edu</a>
+
+<br>
+</p>
+</div>
+
+
+
+
+<div class="UpperLeftHeader">
+<p>Tufts COMP 150-IDS (Spring 2016):
+<br>
+Internet-scale Distributed Systems</p>
+</div>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - -
+		HOMEWORK TITLE
+  - -  - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<div class="headerdiv">
+<h1>
+Tufts COMP 150-IDS:<br>
+File Copy Project Report
+</h1>
+</div>
+
+<!-- ******************************************************
+
+              PLEASE ANSWER QUESTIONS IN THE SECTIONS
+	      LABELED class="a" (for answer)
+
+     ****************************************************** -->
+
+
+
+
+<div class="main">
+
+<h2 id="questions">Questions</h2>
+<!-- - - - - - - - - - - - - - - - - - - - - - - -
+		QUESTION
+  - -  - - - - - - - - - - - - - - - - - - - - - - -->
+<div class="qa">
+
+<ol class="qa">
+<li class="q">What are the highest "nastiness" levels at which you believe your program will
+successfully copy an entire directory full of files? (We will test your programs using those levels
+on both the client and the server; if all you got working
+was the end-to-end check, then please tell us how to test your work. <em>Also: if high network nastiness messes up your ability to deal with file nastiness, you can give us two pairs: e.g. Test my client and server with networknastiness=4 and filenastiness=1 or networknastiness=0 and filenastiness=3)</em></li>
+<li class="a">
+Please test our client and server with: networknastiness=4 and filenastiness=4. We think theoretically our filenastiness=5 works, but since our protocol retransfers the entire file when the end to end check fails, it would take a really really long time.
+</li>
+
+<li class="q">Is there anything else we should
+know about testing your code, or what you expect it to do
+(beyond what's explained in your report below)?</li>
+<li class="a">
+The execution can take a while because of our retry protocol (we resend the entire file on failure. Also we set the timeout on the client to be 1 second so it can take a full second for the client to realize a packet was lost.
+</li>
+
+<li class="q">Did you get help from anyone other than your teammate? If "yes", then briefly explain who helped you and how.</li>
+<li class="a">
+None.
+</li>
+
+
+<li class="q">(optional) Do you have any other comments on this assignment (e.g. was it worthwhile, what did you learn from it, do you have suggestions for improvment if the course is offered again)?</li>
+<li class="a">
+I thought this was a really interesting project; I thought the parameters (the bits in the packet were correct, the memory was correct) help make this project doable in a short period of time, while the project did offer a lot of real world experience to it. I learned a lot about debugging a distributed program because often the issue is in both the client and the server.
+<br><br>
+Jacob really liked the project, he thought it was challenging, it was hard to come up with a protocol ourselves, but he feels like we've learned a lot about reliability. Given more time, we may have came up with a more efficient protocol to make it quicker on retries.
+</li>
+
+</ol>
+
+<!-- * * * * * * * * * * * * * * * * * * * * * -->
+<!--            REPORT GOES HERE               -->
+<!-- * * * * * * * * * * * * * * * * * * * * * -->
+
+<h1>Report</h2>
+<h1 class="center">Overview</h1>
+<h4 class="center">COMP150IDS File Copy Assignment </h4>
+<h5 class="center">By: Jacob Apkon and Yueming Luo </h5>
+<!--Purpose of the project? What did we do? what worked and what didnt -->
+<p>The purpose of this project is to design and build a file copy program, both the server side and client side, that can copy files from the client to the server while dealing with network and disk nastiness (network nastiness means dropped or delayed packet, while disk nastiness means erroneous reads and writes). We designed a transmission protocol that breaks every file into packets and sends them to the server; our protocol then performs and end to end check between the client and the server to ensure file fidelity, after the entire file has been sent. Based on our tests, our protocol works as expected and can deal with errors both in the network and in the disk; however it can take a very long time for the transfer to complete when the error rate is high because when the end-to-end check fails, the client resends the entire file, not just part of it.</p>
+
+<h1 class="center">Protocol Specification</h1>
+<!-- Client; its sequence of action -->
+<h3>Client:</h3>
+<p>The client contains a map that maps filenames to their states: <b>IN_PROGRESS, PENDING, COMPLETE</b><br></p>
+<p>
+<b>Files not in the map:</b> The client has not started reading/sending this file yet.<br>
+<b>IN_PROGRESS:</b> The client has started transferring the file, the state can only move to PENDING when it has finished sending all the packets, and the server has responded with all acknowledgments. <br>
+
+<b>PENDING:</b> The client has sent all the packets for this file and they have all been ACK'd. It is sending the hash and waiting for the response from the server. If the hash response indicates the hash comparison was correct, it goes to COMPLETE. If the hash response indicated the comparison failed, it goes back to IN_PROGRESS and sends the entire file from the beginning. <br>
+
+<b>COMPLETE:</b> The client has received a positive response from the server verifying the hash. The file is done and will no longer be interacted with.
+
+</p>
+<p>For each <a href="#legal">legal file</a> in the source directory:</p>
+<ol>
+  <li>Open up the file for reading</li>
+  <li>Create an entry in the filestates map, using the filename as the key, set its status to IN_PROGRESS</li>
+  <li><a href="#reading">Read the file</a> and split the file up into groups of 250 bytes, our transfer size. </li>
+  <li>Create an array of <a href="structs">transfer packets</a> that each one of these 250 bytes chunk go into.</li>
+  <li>For each packet, send it to the server and wait for the server to acknowledge it before moving on, resend if no acknowledgment is received before the <a href="#timeout">timeout</a></li>
+  <li>Once every transfer packet has been successfully acknowledged, set the file state in the map to PENDING</li>
+  <li>Read the file, hash it and send the hash in a hashrequest packet. If the hashresponse packet from the server times out, resend the hashrequest packet.</li>
+  <li>On receipt of a hashresponse from the server, if the server confirmed correct, change the file state to COMPLETE; else change it back to IN_PROGRESS and go to step 3</li>
+  <li>Close the file if complete</li>
+</ol>
+
+<!-- Server; its sequence of packets -->
+<h3>Server</h3>
+<p>The server also has a map of filenames to states</p>
+<p>
+<b>Not in the map:</b> The server has never received the first transfer packet<br>
+<b>IN_PROGRESS:</b> The server is in the process of receiving the file; the filesize has not reached the indicated filesize; see <a href="#struct">transfer struct</a> <br>
+
+<b>PENDING:</b> The server has received the entire file, it will still acknolwedge transfer packets but won't modify the file. It is in the process of hashing the server side file and sending the correct/incorrect acknowledgement to the client. File state becomes COMPLETE when the server correctly verifies the client's hash with the server side file hash, and IN_PROGRESS if the hash check failed <br>
+
+<b>COMPLETE:</b> The server has successfully verified the file. The server will still acknowledge hash requests but won't modify the file. It will ignore all transfer packets because they must have been delayed. The server will rename the file to remove the .tmp
+</p>
+
+<p>On receipt of a packet, determine the type of packet it is by checking the packet code (always the first byte), and parse it into the <a href="#struct">individual packet structs</a>. </p>
+<p>For a correctly formatted <b>transfer</b> packet:</p>
+<ul>
+<li>If the file referenced is in the state COMPLETE on the server, we ignore the packet - it must have arrived late.
+</li>
+<li>If the file is currently PENDING, we reply with a positive acknowledgement (type: transfer_ack) but do not modify the file because the server has received the entire file.</li>
+<li>Else set the file state to IN_PROGRESS and create the file (with .tmp) if not already there
+  <ul><li>Write/overwrite the bytes referenced in the transfer packet</li>
+  <li>Prepare and send the acknowledgement (type: transfer_ack) to the client</li>
+  <li>If the filesize matches the filesize of the file (this piece of information is sent along with every transfer packet), set the file state to PENDING, because the whole packet has arrived so a end-to-end check must be coming.</li>
+  </ul></li>
+</ul>
+
+<p>For a correctly formatted <b>endtoend request</b> packet:</p>
+<ul>
+  <li>
+    If the file referenced in the packet is in state IN_PROGRESS, we ignore it - it must be a delayed endtoend request from a failed attempt
+  </li>
+  <li>
+    If the file referenced in the packet is in state COMPLETE, we respond with a hash response that the hash check was correct (packet type: endtoend_ack)
+  </li>
+  <li>
+    Else: open, read, and hash the file
+    <ul>
+      <li>If the hash the client sent matches the server's hash, move the file state to complete and reply with a positive hash response</li>
+      <li>If the hash does not match, delete the file, set the file state in the map to be IN_PROGRESS, send a hash response to the client that states the check has failed (packet type: endtoend_ack)</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- Packet Structs and explanation-->
+<h3 id="struct">Packet Structures</h3>
+<p>There are four types of packets that we use to facilitate communication between the server and the client</p>
+
+<table border="1">
+    <tr><td colspan="2" class="center">transferpacket (only sent by the client) - 511 bytes</td></tr>
+    <tr><td>char code</td><td>We store the ID that represent this type of packet (1 byte)</td></tr>
+    <tr><td>unsigned seqNum</td><td>ID of the current packet in the file, used to calculate where to write the contents (4 bytes)</td></tr>
+    <tr><td>filename</td><td>character array storing the filename (252 bytes)</td></tr>
+    <tr><td>unsigned file_size</td><td>Size of the file as an unsigned (4 bytes)</td></tr>
+    <tr><td>file</td><td>The content of the file, up to 250 bytes (250 bytes)</td></tr>
+</table>
+<p>The client breaks the file up into these packets and send them to the server. The client will wait until it receives an acknowledgement from the server for each packet before moving on </p>
+
+<table border="1">
+    <tr><td colspan="2" class="center">transferpacket_ack (only sent by the server) - 257 bytes</td></tr>
+    <tr><td>char code</td><td>Identification of the type of packet (1 byte)</td></tr>
+    <tr><td>filename</td><td>character array storing the filename (252 bytes)</td></tr>
+    <tr><td>unsigned seqNum</td><td>ID of the packet the server received (4 bytes)</td></tr>
+</table>
+<p>The transferpacket_ack indicates from the server to the client, that this specific transfer packet was received by the server and the client can move on and send the next one.</p>
+
+<table border="1">
+    <tr><td colspan="2" class="center">endtoendpacket (only sent by the client) - 273 bytes</td></tr>
+    <tr><td>char code</td><td>Identification of the type of packet (1 byte)</td></tr>
+    <tr><td>filename</td><td>character array storing the filename (252 bytes)</td></tr>
+    <tr><td>unsigned char hash</td><td>Hash of the file, as calculated by the client (20 bytes)</td></tr>
+</table>
+<p>After the client receives acknowledgement for the last transfer packet of the file, the client calculates the hash and sends it to the server to confirm. If timeout, client resends.</p>
+
+<table border="1">
+    <tr><td colspan="2" class="center">endtoendpacket_ack (only sent by the server) - 254 bytes</td></tr>
+    <tr><td>char code</td><td>Identification of the type of packet (1 byte)</td></tr>
+    <tr><td>filename</td><td>character array storing the filename (252 bytes)</td></tr>
+    <tr><td>bool success</td><td>True or false depending on if the hash was correct(1 bytes)</td></tr>
+</table>
+<p>The server responds with true or false after receiving an endtoendpacket (which contains the client's hash).</p>
+
+<!-- Invariants -->
+<h5>Invariants</h5>
+<ul>
+    <li>Any file on the server that has been mapped to COMPLETE is certified to be complete, and no further packets will have any effect on it</li> 
+    <li>Any file on the client that is COMPLETE, will not be touched agian.</li>
+</ul>
+
+<h1 class="center">Case Analysis</h1>
+<!-- Why we chose to design our protocol as such -->
+<p>We chose to use a stop and wait protocol for transferring the packet, where the communication will be acknowledged before the client/server move on to the next communication. Also any communication the client sends will be acknowledged by the server, and if the acknowledgement gets lost (timesout), the client will just re-request it.</p>
+
+<!-- Protocol on network failure (packet reordering/drops)-->
+<h3 id="#timeout">Handling of Network Failure</h3>
+<h4>Client</h4>
+<p>We designed our protocol to be able to handle network failures, including reordering of packets and packet losses. On the client side, the client sends the transfer packet in order, and does not move to the next packet until a confirmation is received from the server that specific packet is on the server (this deals with the reordering of packet). If the transfer packet acknowledgement times out, the client will keep sending the specific packet. As for the endtoendpacket, the client will keep sending the server the hash request until it receives a response (since there's only one packet, it can't be reordered). Furthermore, if a delayed acknolwedgement of a transfer packet or a delayed hash acknowledgement is received, we use the file states to check for whether such an operation is allowed at that point. e.g. If a file is marked complete, the client won't respond to any transfer_acks related to that file. </p>
+
+<h4>Server</h4>
+<p>The server operates on a request/response type model. For any packet it receives, it will perform the necessary actions (if legal), no matter the order. For example if the server receives multiple transfer packets for the same bytes (due to delayed transfer_acknowledgements), it will just overwrite the bits, as the requests are idempotent. The server will also reply acknowledgements for all cases if it can verify that the file is correct on the server. Finally, the server also keeps track of the state of each file to prevent pre-mature or delayed operations. For example, the server will never overwrite the file if the server has verified the hash once (i.e. it is in state COMPLETE on the server).</p>
+
+<!-- Protocol on disk failure (wrong or failed to reads) -->
+<h3>Handling of Disk Failure</h3>
+<!-- Failure on read -->
+<h4 id="reading">On reads</h4>
+<p>We deal with inconsistencies in the disk by reading the same byte many times. For every byte, we create a map that maps characters to number of times they've been read. If any character in the map exceeds the threshhold (2 * disk nastiness + 1), we accept that byte as the correct byte and return it. We chose this threshhold because in higher error rates, the wrong data could be read multiple times. However, even with this algorithm, it's no guarantee that the file read is correct, which is why we run the end to end check at the end.</p>
+
+<h4>On writes</h4>
+<p>We write a byte, then read it back using our read method (retrying the read until byte passes threshhold); If the two are the equal, we accept that the byte on the disk is correct. Again this is not a guarantee, but it reduces the likelyhood for an invalid byte to make it on to the disk. We also have the end to end check in the end.</p>
+
+<h5>Known Failure Cases</h5>
+<ul>
+    <li>Because our system re-sends the entire file on an end-to-end check failure, it can take a very long time with frequent disk failures and frequent network timeouts.</li>
+    <li>If the last packet arrives earlier than it was supposed to, the end-to-end check will always (rightly) fail. This is because on the server side, when the file is the correct size, it believes it has received all packets and thus it is waiting for an end-to-end check even though it hasn't actually received all packets.</li>
+</ul>
+
+<h1 class="center">Other Information</h1>
+
+<!-- Grading log, explain it, attempts? -->
+<h5>Grading Log</h5>
+<p>Our grading log records the number of attempts the client tried to send the file (caused by failed endtoend check), the start and end of transmission/receiving of a file (on both the client and the server), and the result of the endtoend check on the server and its acknowledgement on the client.</p>
+<!-- Bugs? -->
+<h5>Bugs</h5>
+<p>There seems to be a transient bug that causes the server and client to not agree on whether a file was correctly sent; it just causes unnecessary retries which increases the time of transmission. It may be caused by a reordering of packets, in which the last packet arrives before some of the previous ones.</p>
+<h5>Improvements</h5>
+<p>There are several improvements we could still make on our code given more time. Firstly, our program currently will retry until it gets a positive end to end check. However in the real world, that may not always be possible, e.g. the network is actually down, our program should implement a give-up policy after a certain number of retries. Secondly, our program resends the entire file on a failed endtoend check, but a better solution would be to figure out where the file failed and resend only specific parts? or we could verify each packet and resend the packet?</p>
+<!-- Things we still could improve on e.g. giving up? resending the entire file? -->
+
+<h5>Discussion of the algorithm</h5>
+<!-- Discussion of algorithm -->
+<!-- tradeoff on packet delay and stuff -->
+<p>Our algorithm of stop and go is inefficient in that the client waits on the server to acknowledge each individual packet before moving on. This is a simple algorithm to code and it makes a lot of sense logically. Another benefit is that both the server and the client are on the same page when dealing with a transfer.<br>
+
+We also chose a timeout of 1 second before resending a request. If we reduce the time, we would've known that a packet was lost much quicker (which saves a lot of time on the big files), but it also causes more packets to be timed out.
+
+<!-- Things you learned from the assignment -->
+<h5>Things we learned</h5>
+<p>Yueming: I learned a lot about dealing with the real world where there could be errors and delays in the network/disk/other sources. I think it was very interesting because we've never been exposed to such a parameter before. It is also challenging because there may be no way of obtaining the "truth", and we have to deal with these problems without trusting anything.</p>
+
+<h5>Notes</h5>
+<p id="legal">
+  A legal file must not start with a . or ..; cannot be a directory; can only have a filename of 251 bytes (the limit from UNIX is 255, subtracting 4 for appending .tmp and one for a NULL terminator)
+</p>
+</div>
+</div>
+</body>
+</html>
