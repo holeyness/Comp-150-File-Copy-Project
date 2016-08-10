@@ -1,0 +1,6 @@
+THIS IS LOG FILE: GRADELOG.client.2016:03:03_19:43:56.txt
+Grading log started on 03/03/2016 19:43:56.255322 Command line = [./client COMP150IDS-02 1 0 ../SRC]
+File: moor.txt, beginning transmission, attempt 0
+File: moor.txt transmission complete, waiting for end-to-end-check, attempt 0
+File: moor.txt, end-to-end check failed, attempt 0
+File: moor.txt, beginning transmission, attempt 1

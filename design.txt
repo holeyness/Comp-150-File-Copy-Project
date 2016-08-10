@@ -1,0 +1,44 @@
+FileCopy
+Jacob Apkon and Ian Luo
+japkon01 and yluo01
+
+Packet Types:
+endtoendpacket     - Used as both a request and a response for a file's hash
+endtoendpacket_ack - Client tells the server whether the file was correctly
+                     transfered or not
+transferpacket     - Used to send the file 255 bytes at a time
+
+File Transfer Protocol:
+We are going to implement a stop and wait protocol. We will send a transfer
+packet that has 255 bytes of a file to the server. We will not send the second
+packet until we are sure the first packet arrived (via an ACK). The server will
+discard any duplicate packets it receives, and the client will discard any
+delayed ACKs for packets whose ACK it has already received. Once the entire
+file has been confirmed to have arrived at the server, the client will send a
+request for the file's hash from the server. The client will request the hash up
+to five times, and wait for a response. When receiving a response, the client
+will compare the server's hash with its own. If the hashes do not match, the
+client will send the server an endtoendpacket_ack packet that will say the
+server's copy of the file is wrong. Otherwise, the client will send a packet
+that says the server's copy is correct. (The client will send this packet 10
+times to the server). If the server's copy is incorrect, it will discard the
+temporary file, and the transfer will be started from scratch (with the sequence
+number reset by the client). This process is repeated for each file in the
+directory.
+
+Reading a file from disk:
+For each byte read from disk, we will read the same byte enough times to be sure
+its correctness. To do this, we will use a C++ map that maps bytes to the number
+of times the read gave that exact byte. Our hope is that by reading the same
+byte enough times we will come up with a "best guess" for what the actual byte
+is. We will keep reading the same byte until the same 8 bits have been read
+filenastiness * 2 + 1 times. Once a byte has been counted this number of times,
+we say that the value associated with that count is the actual value of the byte
+on disk.
+
+Writing the file to disk:
+Every time we write the file to disk, we will read it back and check for
+equality. Though we may get false negatives (a proper write that appears to have
+failed), we think it is incredibly unlikely to get a false positive. In our
+opinion it is worth rewriting because of false negatives to virtually eliminate
+the possibility of false positives.

@@ -1,0 +1,2 @@
+THIS IS LOG FILE: GRADELOG.server.2016:03:03_19:43:10.txt
+Grading log started on 03/03/2016 19:43:10.903092 Command line = [./server]

@@ -1,0 +1,17 @@
+How to deal with network nastiness
+
+1. Client sends a End to end request packet
+	on time out resend
+	on hash response compare and send success ack x 10
+2. Server receives an end to end request
+	creates hash and sends 1 response ack per hash request
+
+only when server receives the success does it confirm and moves the pending file to the final location without temp or deletes it
+
+
+How to deal with file nastiness
+On read:
+	For each byte, read it, add 1 to the count in the map, if it exceeds the threshhold of nastiness *2 + 1, add the byte to the final file
+On write
+	For each byte, write a byte, read it back if it matches continue, if not keep writing it
+

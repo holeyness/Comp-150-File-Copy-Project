@@ -1,0 +1,22 @@
+THIS IS LOG FILE: GRADELOG.server.2016:03:03_19:43:15.txt
+Grading log started on 03/03/2016 19:43:15.379383 Command line = [./server 1 0 TARGET]
+File: moor.txt starting to receive file
+File: moor.txt received, beginning end-to-end check
+File: moor.txt end-to-end check succeeded
+File: independence.txt received, beginning end-to-end check
+File: independence.txt end-to-end check failed
+File: independence.txt starting to receive file
+File: independence.txt received, beginning end-to-end check
+File: independence.txt end-to-end check failed
+File: independence.txt starting to receive file
+File: independence.txt received, beginning end-to-end check
+File: independence.txt end-to-end check succeeded
+File: love.txt starting to receive file
+File: love.txt received, beginning end-to-end check
+File: love.txt end-to-end check succeeded
+File: data1 starting to receive file
+File: data1 received, beginning end-to-end check
+File: data1 end-to-end check succeeded
+File: romeo.txt received, beginning end-to-end check
+File: romeo.txt end-to-end check failed
+File: romeo.txt starting to receive file
